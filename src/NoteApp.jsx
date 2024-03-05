@@ -4,44 +4,19 @@ import HomePage from "./Pages/HomePage"
 import ArchivedPage from "./Pages/ArchivedPage"
 import { LocaleProvider } from "./Context/localeContext"
 import { ThemeProvider } from "./Context/themeContext"
-import useLocale from "./hooks/useLocale"
-import useTheme from "./hooks/useTheme"
 import AddNotes from "./Pages/AddNotes"
 import NotFoundPage from "./Pages/NotFoundPage"
 import LoginPage from "./Pages/LoginPage"
 import RegisterPage from "./Pages/RegisterPage"
-import { useEffect, useState } from "react"
-import { getUserLogged, putAccessToken } from "./utils/network-data"
 import DetailNote from "./Pages/DetailNote"
+import { useAuthenticate, useLocale, useTheme } from "./hooks"
 
 const NoteApp = () => {
     const localeContext = useLocale();
     const themeContext = useTheme();
 
-    const [authUser, setAuthUser] = useState(null)
-    const [initilize, setInitilize] = useState(true);
+    const { initilize, authUser, onLoginSuccess, onLogout } = useAuthenticate();
 
-    const onLoginSuccess = async ({ accessToken }) => {
-        putAccessToken(accessToken)
-        const { data } = await getUserLogged();
-
-        setAuthUser(data)
-    }
-
-    useEffect(() => {
-        async function logged() {
-            const { data } = await getUserLogged()
-            setAuthUser(data)
-            setInitilize(false)
-        }
-        logged();
-    }, [])
-
-    const onLogout = () => {
-        setAuthUser(null);
-
-        putAccessToken('')
-    }
     if (initilize) {
         return null;
     }

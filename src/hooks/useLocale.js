@@ -18,4 +18,4 @@ const useLocale = () => {
     return localeContext
 }
 
-export default useLocale
+export { useLocale }

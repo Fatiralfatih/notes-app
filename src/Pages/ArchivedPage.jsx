@@ -1,34 +1,28 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext } from "react"
 import NotesList from "../Components/NotesList"
 import Searchbar from "../Components/Searchbar"
-import { getArchivedNotes } from "../utils/network-data";
 import Spinner from "../Components/Spinner";
 import LocaleContext from "../Context/localeContext";
+import { useArchivedNotes, useSearchTitle } from "../hooks";
 
 const ArchivedPage = () => {
-
-    const [notes, setNotes] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const { keyword, handlerSearch } = useSearchTitle()
+    const { notes, loading } = useArchivedNotes();
     const { locale } = useContext(LocaleContext);
-
-    useEffect(() => {
-        async function getArhived() {
-            const { data } = await getArchivedNotes();
-            setNotes(data)
-            setLoading(false);
-        }
-        getArhived();
-    }, [])
+    const filterSearch = notes.filter((note) => note.title.toLowerCase().includes(keyword.toLowerCase()))
 
     return (
         <div className="archives-page">
             <h2>{locale === 'id' ? 'Halaman Arsip' : 'Archived Page'}</h2>
-            <Searchbar />
-            {loading
-                ? (<Spinner />)
-                : notes
-                    ? (<NotesList notes={notes} />)
-                    : (<div className="notes-list-empty"><p>Tidak Ada Catatan</p></div>)}
+            <Searchbar
+                keyword={keyword}
+                onSearch={handlerSearch}
+            />
+            {loading && (<Spinner />)}
+            {notes
+                ? (<NotesList notes={filterSearch} />)
+                : (<div className="notes-list-empty"><p>Tidak Ada Catatan</p></div>)}
+
         </div>
     )
 }
