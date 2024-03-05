@@ -14,7 +14,7 @@ const LoginPage = ({ loginSuccess }) => {
 
     return (
         <section className="login-page">
-            <h2>Masuk</h2>
+            <h2>Masuks</h2>
             <LoginInput login={onLogin} />
             <p>Belum punya akun? <Link to='/register'>Register</Link></p>
         </section>
